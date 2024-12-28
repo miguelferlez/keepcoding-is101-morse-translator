@@ -1,6 +1,15 @@
 from tkinter import *
 from app.morse import to_morse, to_string
 
+def click(command:str, get_text:Text, set_text:Text):
+    input_text = get_text.get('1.0','end-1c')
+    set_text.delete('1.0', END)
+    if command == 'to plain':
+        set_text.insert('1.0', to_string(input_text))
+    elif command == 'to morse':
+        set_text.insert('1.0', to_morse(input_text))
+
+
 def create_plain_frame(container:Frame)->Frame:
     plain_frame = Frame(container, width=250, height=337, padx=10, pady=10)
     plain_frame.place(x=330, y=0)
@@ -17,16 +26,16 @@ def create_plain_frame(container:Frame)->Frame:
 
     return plain_frame, plain_text_area
 
-def create_buttons_frame(container:Frame)->Frame:
+def create_buttons_frame(container:Frame, morse_text:Text, plain_text:Text)->Frame:
     buttons_frame = Frame(container, width=80, height=337, padx=10, pady=10)
     buttons_frame.place(x=250,y=0)
     buttons_frame.pack_propagate(False)
     buttons_label = Label(buttons_frame, text='')
     buttons_label.pack(side='top')
 
-    morse_to_string_button = Button(buttons_frame, text='>', width=6)
+    morse_to_string_button = Button(buttons_frame, text='>', width=6, command=lambda : click('to plain', morse_text, plain_text))
     morse_to_string_button.pack(side='top', fill='x')
-    string_to_morse_button = Button(buttons_frame, text='<', width=6)
+    string_to_morse_button = Button(buttons_frame, text='<', width=6, command=lambda : click('to morse', plain_text, morse_text))
     string_to_morse_button.pack(side='top', fill='x')
 
     return buttons_frame
@@ -81,8 +90,8 @@ def create_main_window():
     create_header(window)
     body = create_body(window)
     create_morse_frame(body)
-    create_buttons_frame(body)
     create_plain_frame(body)
+    create_buttons_frame(body, create_morse_frame(body)[1], create_plain_frame(body)[1])
       
     root.mainloop()
 
