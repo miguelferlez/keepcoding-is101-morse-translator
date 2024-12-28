@@ -1,5 +1,5 @@
 from tkinter import *
-import tkinter.font as font
+from app.morse import to_morse, to_string
 
 def create_plain_frame(container:Frame)->Frame:
     plain_frame = Frame(container, width=250, height=337, padx=10, pady=10)
@@ -13,12 +13,11 @@ def create_plain_frame(container:Frame)->Frame:
     plain_text_area_container.pack(side='top', expand=True, fill='both')
     plain_text_area_container.pack_propagate(False)
     plain_text_area = Text(plain_text_area_container)
-    plain_text_area.pack(side='top', fill='both', expand=False)
+    plain_text_area.pack(side='top')
 
-    return plain_frame
+    return plain_frame, plain_text_area
 
 def create_buttons_frame(container:Frame)->Frame:
-    FONT = font.Font(size=16)
     buttons_frame = Frame(container, width=80, height=337, padx=10, pady=10)
     buttons_frame.place(x=250,y=0)
     buttons_frame.pack_propagate(False)
@@ -33,7 +32,6 @@ def create_buttons_frame(container:Frame)->Frame:
     return buttons_frame
 
 def create_morse_frame(container:Frame)->Frame:
-    FONT = font.Font(size=17)
     morse_frame = Frame(container, width=250, height=337, padx=10, pady=10)
     morse_frame.place(x=0, y=0)
     morse_frame.pack_propagate(False)
@@ -45,16 +43,16 @@ def create_morse_frame(container:Frame)->Frame:
     morse_text_area_container.pack(side='top', expand=True, fill='both')
     morse_text_area_container.pack_propagate(False)
     morse_text_area = Text(morse_text_area_container)
-    morse_text_area.pack(side='top', fill='both', expand=False)
+    morse_text_area.pack(side='top')
 
-    dot_button = Button(morse_frame, text='•',   width=6)
-    dot_button.pack(side='left', expand=False)
-    stop_button = Button(morse_frame, text='stop',   width=6)
-    stop_button.pack(side='right', expand=False)
-    slash_button = Button(morse_frame, text='᠆',   width=6)
-    slash_button.pack(side='bottom', expand=False)
+    dot_button = Button(morse_frame, text='•', width=6, command=lambda : morse_text_area.insert(END, '.'))
+    dot_button.pack(side='left')
+    stop_button = Button(morse_frame, text='space', width=6, command=lambda : morse_text_area.insert(END, ' '))
+    stop_button.pack(side='right')
+    slash_button = Button(morse_frame, text='᠆', width=6, command=lambda : morse_text_area.insert(END, '-'))
+    slash_button.pack(side='bottom')
 
-    return morse_frame
+    return morse_frame, morse_text_area
 
 def create_body(container:Frame)->Frame:
     body = Frame(container)
@@ -64,7 +62,7 @@ def create_body(container:Frame)->Frame:
 
 def create_header(container:Frame)->Frame:
     header = Frame(container)
-    header.pack(side='top', fill='both', padx=10, pady=10)
+    header.pack(side='top', fill='x', padx=10, pady=10)
 
     title = Label(header, text='MORSE TRANSLATOR')
     title.pack(side='top', anchor='w')
